@@ -57,7 +57,7 @@ extension Product: Migration {
     static func prepare(on conn: PostgreSQLConnection) -> Future<Void> {
         return PostgreSQLDatabase.create(Product.self, on: conn) { builder in
             builder.field(for: \.id, isIdentifier: true)
-            builder.field(for: \.ownerID)
+            builder.field(for: \.vendorID)
             builder.field(for: \.createdAt)
             builder.field(for: \.updatedAt)
             builder.field(for: \.name)
@@ -70,6 +70,7 @@ extension Product: Migration {
             builder.field(for: \.limit)
             builder.field(for: \.image)
             
+            builder.reference(from: \.vendorID, to: \Vendor.id, onDelete: .cascade)
             builder.unique(on: \.id)
         }
     }

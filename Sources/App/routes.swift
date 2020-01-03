@@ -26,7 +26,6 @@ public func routes(_ router: Router) throws {
     try ChildController<Vendor, Product>(keypath: \Product.vendorID).boot(router: router)
     try ChildController<Vendor, List>(keypath: \List.vendorID).boot(router: router)
     //Siblings routes
-    try SiblingController<Vendor, Product, VendorProduct>(keypathLeft: VendorProduct.leftIDKey, keypathRight: VendorProduct.rightIDKey).boot(router: router)
     try SiblingController<List, Product, ListProduct>(keypathLeft: ListProduct.leftIDKey, keypathRight: ListProduct.rightIDKey).boot(router: router)
     try SiblingController<Event, List, EventProductList>(keypathLeft: EventProductList.leftIDKey, keypathRight: EventProductList.rightIDKey).boot(router: router)
     try SiblingController<Order, Product, OrderProduct>(keypathLeft: OrderProduct.leftIDKey, keypathRight: OrderProduct.rightIDKey).boot(router: router)

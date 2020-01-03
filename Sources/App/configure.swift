@@ -41,7 +41,6 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     migrations.add(model: List.self, database: .psql)
     migrations.add(model: Product.self, database: .psql)
     //📋 Pivots tables
-    migrations.add(model: VendorProduct.self, database: .psql)
     migrations.add(model: ListProduct.self, database: .psql)
     migrations.add(model: EventProductList.self, database: .psql)
     migrations.add(model: OrderProduct.self, database: .psql)

@@ -2,7 +2,7 @@ import Foundation
 import FluentPostgreSQL
 import Vapor
 
-final class Vendor: VaporSibling {
+final class Vendor: VaporModel {
     static var createdAtKey: TimestampKey? { return \.createdAt }
     static var updatedAtKey: TimestampKey? { return \.updatedAt }
     
@@ -20,20 +20,6 @@ final class Vendor: VaporSibling {
     func update(_ model: Vendor) throws {
         name = model.name
     }
-    
-    func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : PostgreSQLModel {
-        return products.isAttached(model as! Product, on: conn)
-    }
-    
-    func attach<T, P>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<P?> where T : PostgreSQLModel, P : VaporPivot {
-        return products.attach(model as! Product, on: conn).map { pivot -> P? in
-            return pivot as? P
-        }
-    }
-    
-    func detach<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Void> where T : PostgreSQLModel {
-        return products.detach(model as! Product, on: conn)
-    }
 }
 
 extension Vendor {
@@ -45,8 +31,8 @@ extension Vendor {
         return children(\List.vendorID)
     }
     
-    var products: Siblings<Vendor, Product, VendorProduct> {
-        return siblings()
+    var products: Children<Vendor, Product> {
+        return children(\Product.vendorID)
     }
 }
 
