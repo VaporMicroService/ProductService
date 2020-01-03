@@ -14,8 +14,8 @@ extension List {
 }
 
 extension Product {
-    static func create(on connection: PostgreSQLConnection) throws -> Product {
-        let product = Product(ownerID: ["1234"])
+    static func create(vendorID: Vendor.ID, on connection: PostgreSQLConnection) throws -> Product {
+        let product = Product(vendorID: vendorID)
         product.name = "Test Product"
         product.description = "None existend item"
         return try product.save(on: connection).wait()
@@ -43,7 +43,7 @@ class SiblingControllerTests: XCTestCase {
     
     func testAddSibling() throws {
         let vendor = try Vendor.create(on: conn)
-        let product = try Product.create(on: conn)
+        let product = try Product.create(vendorID: try vendor.requireID(), on: conn)
         let list = try List.create(vendorID: try vendor.requireID(), on: conn)
         
         XCTAssertNil(try ListProduct.query(on: conn).filter(\ListProduct.productID ==  product.requireID()).filter(\ListProduct.listID ==  list.requireID()).first().wait())
@@ -58,7 +58,7 @@ class SiblingControllerTests: XCTestCase {
     
     func testRemoveSibling() throws {
         let vendor = try Vendor.create(on: conn)
-        let product = try Product.create(on: conn)
+        let product = try Product.create(vendorID: try vendor.requireID(), on: conn)
         let list = try List.create(vendorID: try vendor.requireID(), on: conn)
         
         let event: EventLoopFuture<ListProduct?> = list.attach(product, on: conn)
@@ -78,7 +78,7 @@ class SiblingControllerTests: XCTestCase {
         let list = try List.create(vendorID: try vendor.requireID(), on: conn)
         
         for _ in 0..<50 {
-            let product = try Product.create(on: conn)
+            let product = try Product.create(vendorID: try vendor.requireID(), on: conn)
             let event: EventLoopFuture<ListProduct?> = list.attach(product, on: conn)
             _ = try event.wait()
         }
@@ -94,7 +94,7 @@ class SiblingControllerTests: XCTestCase {
     
     func testGetRHSSibling() throws {
         let vendor = try Vendor.create(on: conn)
-        let product = try Product.create(on: conn)
+        let product = try Product.create(vendorID: try vendor.requireID(), on: conn)
         
         for _ in 0..<25 {
             let list = try List.create(vendorID: try vendor.requireID(), on: conn)

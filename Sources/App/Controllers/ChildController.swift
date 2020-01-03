@@ -12,6 +12,7 @@ struct ChildController<Parent: VaporModel, Child: VaporModel> {
         route.put(Parent.parameter, "\(Child.name)", "add", use: addChild)
         route.delete(Parent.parameter, "\(Child.name)", Child.parameter, "remove", use: removeChild)
         route.get(Parent.parameter, "\(Child.name)", "children", use: getAllChildren)
+        route.get(Parent.parameter, "\(Child.name)", Child.parameter, use: getChild)
         route.get("\(Child.name)", Child.parameter, "parent", use: getParent)
     }
     
@@ -47,6 +48,14 @@ struct ChildController<Parent: VaporModel, Child: VaporModel> {
         
         return (try req.parameters.next(Parent.self) as! EventLoopFuture<Parent>).flatMap { parent -> EventLoopFuture<[Child]> in
             return try parent.children(self.keypath).query(on: req).range(startIndex ..< endIndex).all()
+        }
+    }
+    
+    func getChild(_ req: Request) throws -> Future<Child> {
+        return map(try req.parameters.next(Parent.self) as! EventLoopFuture<Parent>, try req.parameters.next(Child.self) as! EventLoopFuture<Child>) { parent, child -> Child in
+            let acctualParent: Fluent.Parent<Child, Parent> = child.parent(self.keypath)
+            guard try parent.requireID() == acctualParent.parentID else { throw Abort(.badRequest) }
+            return child
         }
     }
     

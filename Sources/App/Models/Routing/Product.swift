@@ -16,7 +16,7 @@ final class Product: VaporModel {
     static var updatedAtKey: TimestampKey? { return \.updatedAt }
     
     var id: Int?
-    var ownerID: [String]?
+    var vendorID: Vendor.ID!
     var createdAt: Date?
     var updatedAt: Date?
     var name: String?
@@ -29,9 +29,9 @@ final class Product: VaporModel {
     var limit: Int?
     var image: URL?
     
-    init(id: Int? = nil, ownerID: [String]?) {
+    init(id: Int? = nil, vendorID: Vendor.ID) {
         self.id = id
-        self.ownerID = ownerID
+        self.vendorID = vendorID
     }
     
     func update(_ model: Product) throws {
@@ -44,6 +44,12 @@ final class Product: VaporModel {
         price = model.price
         limit = model.limit
         image = model.image
+    }
+}
+
+extension Product {
+    var vendor: Parent<Product, Vendor> {
+        return parent(\.vendorID)
     }
 }
 

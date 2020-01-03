@@ -16,6 +16,7 @@ class ChildControllerTests: XCTestCase {
         ("testAddChild", testAddChild),
         ("testRemoveChild", testRemoveChild),
         ("testGetParent", testGetParent),
+        ("testGetChild", testGetChild),
         ("testGetChildren", testGetChildren),
         ("testGetChildrenWithPagination", testGetChildrenWithPagination),
     ]
@@ -70,6 +71,21 @@ class ChildControllerTests: XCTestCase {
         
         let fetch = try response.content.syncDecode(Vendor.self)
         XCTAssert(try fetch.id == vendor.requireID())
+        XCTAssertNotNil(fetch)
+    }
+    
+    func testGetChild() throws {
+        let vendor = try Vendor.create(on: conn)
+        let event = try Event.create(vendorID: try vendor.requireID(), on: conn)
+
+        
+        var headers = HTTPHeaders()
+        headers.replaceOrAdd(name: .contentID, value: "1234")
+        let response = try app.sendRequest(to: "\(Vendor.name.lowercased())/\(vendor.id!)/\(Event.name)/\(event.id!)", method: .GET, headers: headers)
+        XCTAssertEqual(response.http.status.code, 200)
+        
+        let fetch = try response.content.syncDecode(Event.self)
+        XCTAssert(try fetch.id == event.requireID())
         XCTAssertNotNil(fetch)
     }
     
