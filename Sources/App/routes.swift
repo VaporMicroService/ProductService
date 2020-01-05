@@ -19,12 +19,12 @@ var decoderJSON: JSONDecoder = {
 public func routes(_ router: Router) throws {
     //CRUD routes
     try MainController<Vendor>().boot(router: router)
-    try MainController<Order>().boot(router: router)
     try MainController<Customer>().boot(router: router)
     //Parent-Child relation routes
     try ChildController<Vendor, Event>(keypath: \Event.vendorID).boot(router: router)
     try ChildController<Vendor, Product>(keypath: \Product.vendorID).boot(router: router)
     try ChildController<Vendor, List>(keypath: \List.vendorID).boot(router: router)
+    try ChildController<Customer, Order>(keypath: \Order.customerID).boot(router: router)
     //Siblings routes
     try SiblingController<List, Product, ListProduct>(keypathLeft: ListProduct.leftIDKey, keypathRight: ListProduct.rightIDKey).boot(router: router)
     try SiblingController<Event, List, EventProductList>(keypathLeft: EventProductList.leftIDKey, keypathRight: EventProductList.rightIDKey).boot(router: router)

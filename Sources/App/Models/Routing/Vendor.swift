@@ -34,6 +34,10 @@ extension Vendor {
     var products: Children<Vendor, Product> {
         return children(\Product.vendorID)
     }
+    
+    var orders: Children<Vendor, Order> {
+        return children(\Order.vendorID)
+    }
 }
 
 extension Vendor: Migration {
