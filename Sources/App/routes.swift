@@ -1,33 +1,18 @@
 import Vapor
-
-struct Pagination: Content {
-    var offset: Int?
-    var length: Int?
-}
-
-var decoderJSON: JSONDecoder = {
-    let formatter = DateFormatter()
-    formatter.calendar = Calendar(identifier: .iso8601)
-    formatter.locale = Locale(identifier: "en_US_POSIX")
-    formatter.timeZone = TimeZone(secondsFromGMT: 0)
-    formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-    let decoder = JSONDecoder()
-    decoder.dateDecodingStrategy = .formatted(formatter)
-    return decoder
-}()
+import Avenue
 
 public func routes(_ router: Router) throws {
     //CRUD routes
-    try MainController<Vendor>().boot(router: router)
-    try MainController<Customer>().boot(router: router)
+    _ = MainController<Vendor>(router: router)
+    _ = MainController<Customer>(router: router)
     //Parent-Child relation routes
-    try ChildController<Vendor, Event>(keypath: \Event.vendorID).boot(router: router)
-    try ChildController<Vendor, Product>(keypath: \Product.vendorID).boot(router: router)
-    try ChildController<Vendor, List>(keypath: \List.vendorID).boot(router: router)
-    try ChildController<Customer, Order>(keypath: \Order.customerID).boot(router: router)
+    _ = ChildController<Vendor, Event>(router: router, keypath: \Event.vendorID)
+    _ = ChildController<Vendor, Product>(router: router, keypath: \Product.vendorID)
+    _ = ChildController<Vendor, List>(router: router, keypath: \List.vendorID)
+    _ = ChildController<Customer, Order>(router: router, keypath: \Order.customerID)
     //Siblings routes
-    try SiblingController<List, Product, ListProduct>(keypathLeft: ListProduct.leftIDKey, keypathRight: ListProduct.rightIDKey).boot(router: router)
-    try SiblingController<Event, List, EventProductList>(keypathLeft: EventProductList.leftIDKey, keypathRight: EventProductList.rightIDKey).boot(router: router)
-    try SiblingController<Order, Product, OrderProduct>(keypathLeft: OrderProduct.leftIDKey, keypathRight: OrderProduct.rightIDKey).boot(router: router)
-    try SiblingController<Customer, Order, CustomerOrder>(keypathLeft: CustomerOrder.leftIDKey, keypathRight: CustomerOrder.rightIDKey).boot(router: router)
+    _ = SiblingController<List, Product, ListProduct>(router: router, keypathLeft: ListProduct.leftIDKey, keypathRight: ListProduct.rightIDKey)
+    _ = SiblingController<Event, List, EventProductList>(router: router, keypathLeft: EventProductList.leftIDKey, keypathRight: EventProductList.rightIDKey)
+    _ = SiblingController<Order, Product, OrderProduct>(router: router, keypathLeft: OrderProduct.leftIDKey, keypathRight: OrderProduct.rightIDKey)
+    _ = SiblingController<Customer, Order, CustomerOrder>(router: router, keypathLeft: CustomerOrder.leftIDKey, keypathRight: CustomerOrder.rightIDKey)
 }

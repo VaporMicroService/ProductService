@@ -1,6 +1,7 @@
 import Foundation
 import FluentPostgreSQL
 import Vapor
+import Avenue
 
 final class EventProductList: VaporPivot {
     static let leftIDKey: LeftIDKey = \.eventID

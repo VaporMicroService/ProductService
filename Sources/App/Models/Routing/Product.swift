@@ -1,6 +1,7 @@
 import Foundation
 import FluentPostgreSQL
 import Vapor
+import Avenue
 
 enum ProductType: Int, PostgreSQLRawEnum {
     case wine

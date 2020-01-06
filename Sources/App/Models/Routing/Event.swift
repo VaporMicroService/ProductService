@@ -1,8 +1,9 @@
 import Foundation
 import FluentPostgreSQL
 import Vapor
+import Avenue
 
-final class Event: VaporSibling {
+final class Event: VaporSibling {    
     static var createdAtKey: TimestampKey? { return \.createdAt }
     static var updatedAtKey: TimestampKey? { return \.updatedAt }
     
@@ -28,17 +29,17 @@ final class Event: VaporSibling {
         endTime = model.endTime
     }
     
-    func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : PostgreSQLModel {
+    func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : Model {
         return lists.isAttached(model as! List, on: conn)
     }
     
-    func attach<T, P>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<P?> where T : PostgreSQLModel, P : VaporPivot {
+    func attach<T, P>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<P?> where T : Model, P : VaporPivot {
         return lists.attach(model as! List, on: conn).map { pivot -> P? in
             return pivot as? P
         }
     }
     
-    func detach<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Void> where T : PostgreSQLModel {
+    func detach<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Void> where T : Model {
         return lists.detach(model as! List, on: conn)
     }
 }

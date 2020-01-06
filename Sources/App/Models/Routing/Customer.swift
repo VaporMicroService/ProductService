@@ -1,6 +1,7 @@
 import Foundation
 import FluentPostgreSQL
 import Vapor
+import Avenue
 
 final class Customer: VaporSibling {
     static var createdAtKey: TimestampKey? { return \.createdAt }
@@ -19,17 +20,17 @@ final class Customer: VaporSibling {
     
     func update(_ model: Customer) throws {}
     
-    func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : PostgreSQLModel {
+    func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : Model {
         return orders.isAttached(model as! Order, on: conn)
     }
     
-    func attach<T, P>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<P?> where T : PostgreSQLModel, P : VaporPivot {
+    func attach<T, P>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<P?> where T : Model, P : VaporPivot {
         return orders.attach(model as! Order, on: conn).map { pivot -> P? in
             return pivot as? P
         }
     }
     
-    func detach<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Void> where T : PostgreSQLModel {
+    func detach<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Void> where T : Model {
         return orders.detach(model as! Order, on: conn)
     }
 }

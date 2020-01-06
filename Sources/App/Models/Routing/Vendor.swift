@@ -1,6 +1,7 @@
 import Foundation
 import FluentPostgreSQL
 import Vapor
+import Avenue
 
 final class Vendor: VaporModel {
     static var createdAtKey: TimestampKey? { return \.createdAt }
