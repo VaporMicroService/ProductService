@@ -1,5 +1,6 @@
 import Foundation
 import FluentPostgreSQL
+import FluentPostGIS
 import Vapor
 import Avenue
 
@@ -13,6 +14,7 @@ final class Vendor: VaporModel {
     var updatedAt: Date?
     var title: String?
     var description: String?
+    var image: URL?
     
     init(id: Int? = nil, ownerID: [String]?) {
         self.id = id
@@ -22,6 +24,7 @@ final class Vendor: VaporModel {
     func update(_ model: Vendor) throws {
         title = model.title
         description = model.description
+        image = model.image
     }
 }
 
@@ -52,6 +55,7 @@ extension Vendor: Migration {
             builder.field(for: \.updatedAt)
             builder.field(for: \.title)
             builder.field(for: \.description)
+            builder.field(for: \.image)
             
             builder.unique(on: \.id)
         }

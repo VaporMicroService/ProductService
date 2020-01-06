@@ -1,7 +1,13 @@
 import Foundation
 import FluentPostgreSQL
+import FluentPostGIS
 import Vapor
 import Avenue
+
+struct GeoPoint: Codable {
+    let longitude: Double
+    let latitude: Double
+}
 
 final class Event: VaporSibling {    
     static var createdAtKey: TimestampKey? { return \.createdAt }
@@ -16,6 +22,8 @@ final class Event: VaporSibling {
     var description: String?
     var startTime: Date?
     var endTime: Date?
+    var image: URL?
+    var location: GeographicPoint2D?
     
     init(id: Int? = nil, vendorID: Vendor.ID) {
         self.id = id
@@ -27,6 +35,8 @@ final class Event: VaporSibling {
         description = model.description
         startTime = model.startTime
         endTime = model.endTime
+        image = model.image
+        location = model.location
     }
     
     func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : Model {
@@ -66,6 +76,8 @@ extension Event: Migration {
             builder.field(for: \.description)
             builder.field(for: \.startTime)
             builder.field(for: \.endTime)
+            builder.field(for: \.image)
+            builder.field(for: \.location)
             
             builder.reference(from: \.vendorID, to: \Vendor.id, onDelete: .cascade)
             builder.unique(on: \.id)
