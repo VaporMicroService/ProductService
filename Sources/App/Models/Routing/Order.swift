@@ -2,6 +2,13 @@ import Foundation
 import FluentPostgreSQL
 import Vapor
 
+enum OrderStatus: Int, PostgreSQLRawEnum {
+    case pending
+    case prepare
+    case ready
+    case delivered
+}
+
 final class Order: VaporSibling {
     static var createdAtKey: TimestampKey? { return \.createdAt }
     static var updatedAtKey: TimestampKey? { return \.updatedAt }
@@ -13,6 +20,7 @@ final class Order: VaporSibling {
     var updatedAt: Date?
     var name: String?
     var description: String?
+    var status: OrderStatus = .pending
     
     func update(_ model: Order) throws {
         
@@ -57,6 +65,7 @@ extension Order: Migration {
             builder.field(for: \.updatedAt)
             builder.field(for: \.name)
             builder.field(for: \.description)
+            builder.field(for: \.status)
             
             builder.reference(from: \.customerID, to: \Customer.id, onDelete: .cascade)
             builder.reference(from: \.vendorID, to: \Vendor.id, onDelete: .cascade)

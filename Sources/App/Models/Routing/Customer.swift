@@ -10,16 +10,14 @@ final class Customer: VaporSibling {
     var ownerID: [String]?
     var createdAt: Date?
     var updatedAt: Date?
-    var name: String?
+    var timestamp: Date = Date()
     
     init(id: Int? = nil, ownerID: [String]?) {
         self.id = id
         self.ownerID = ownerID
     }
     
-    func update(_ model: Customer) throws {
-        name = model.name
-    }
+    func update(_ model: Customer) throws {}
     
     func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : PostgreSQLModel {
         return orders.isAttached(model as! Order, on: conn)
@@ -53,7 +51,7 @@ extension Customer: Migration {
             builder.field(for: \.ownerID)
             builder.field(for: \.createdAt)
             builder.field(for: \.updatedAt)
-            builder.field(for: \.name)
+            builder.field(for: \.timestamp)
             
             builder.unique(on: \.id)
         }

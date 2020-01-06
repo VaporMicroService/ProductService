@@ -11,13 +11,21 @@ final class Event: VaporSibling {
     var createdAt: Date?
     var updatedAt: Date?
     
+    var title: String?
+    var description: String?
+    var startTime: Date?
+    var endTime: Date?
+    
     init(id: Int? = nil, vendorID: Vendor.ID) {
         self.id = id
         self.vendorID = vendorID
     }
     
     func update(_ model: Event) throws {
-        
+        title = model.title
+        description = model.description
+        startTime = model.startTime
+        endTime = model.endTime
     }
     
     func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : PostgreSQLModel {
@@ -52,6 +60,11 @@ extension Event: Migration {
             builder.field(for: \.vendorID)
             builder.field(for: \.createdAt)
             builder.field(for: \.updatedAt)
+            
+            builder.field(for: \.title)
+            builder.field(for: \.description)
+            builder.field(for: \.startTime)
+            builder.field(for: \.endTime)
             
             builder.reference(from: \.vendorID, to: \Vendor.id, onDelete: .cascade)
             builder.unique(on: \.id)

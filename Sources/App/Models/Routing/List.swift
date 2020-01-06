@@ -19,7 +19,8 @@ final class List: VaporSibling {
     }
     
     func update(_ model: List) throws {
-        
+        name = model.name
+        description = model.description
     }
     
     func isAttached<T>(_ model: T, on conn: DatabaseConnectable) -> EventLoopFuture<Bool> where T : PostgreSQLModel {

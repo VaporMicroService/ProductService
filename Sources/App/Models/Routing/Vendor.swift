@@ -10,7 +10,8 @@ final class Vendor: VaporModel {
     var ownerID: [String]?
     var createdAt: Date?
     var updatedAt: Date?
-    var name: String?
+    var title: String?
+    var description: String?
     
     init(id: Int? = nil, ownerID: [String]?) {
         self.id = id
@@ -18,7 +19,8 @@ final class Vendor: VaporModel {
     }
     
     func update(_ model: Vendor) throws {
-        name = model.name
+        title = model.title
+        description = model.description
     }
 }
 
@@ -47,7 +49,8 @@ extension Vendor: Migration {
             builder.field(for: \.ownerID)
             builder.field(for: \.createdAt)
             builder.field(for: \.updatedAt)
-            builder.field(for: \.name)
+            builder.field(for: \.title)
+            builder.field(for: \.description)
             
             builder.unique(on: \.id)
         }
