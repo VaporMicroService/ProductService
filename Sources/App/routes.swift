@@ -2,6 +2,8 @@ import Vapor
 import Avenue
 
 public func routes(_ router: Router) throws {
+    let router = router.grouped("festivals")
+    try ProductController().boot(router: router)
     //CRUD routes
     _ = MainController<Vendor>(router: router)
     _ = MainController<Customer>(router: router)
