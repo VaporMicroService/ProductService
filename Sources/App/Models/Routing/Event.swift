@@ -4,11 +4,6 @@ import FluentPostGIS
 import Vapor
 import Avenue
 
-struct GeoPoint: Codable {
-    let longitude: Double
-    let latitude: Double
-}
-
 final class Event: VaporSibling {    
     static var createdAtKey: TimestampKey? { return \.createdAt }
     static var updatedAtKey: TimestampKey? { return \.updatedAt }
