@@ -12,7 +12,7 @@ let package = Package(
         // 🔵 Swift PostGIS built for FluentPostgreSQL.
         .package(url: "https://github.com/plarson/fluent-postgis.git", .branch("master")),
         // 💧 Generic routes generator.
-        .package(url: "https://github.com/VaporMicroService/Avenue.git", from: "0.0.1"),
+        .package(url: "https://github.com/VaporMicroService/Avenue.git", from: "0.0.3"),
     ],
     targets: [
         .target(name: "App", dependencies: ["FluentPostGIS", "Vapor", "Avenue"]),

@@ -5,7 +5,7 @@ import Vapor
 import Avenue
 
 struct Filter: Decodable {
-    var pagination: Pagination?
+    var pagination: Offset?
     var geoPoint: GeographicPoint2D
     var distance: Double
 }
@@ -21,7 +21,7 @@ struct ProductController {
     //MARK: Main
     func getAllEventsByLocation(_ req: Request) throws -> Future<[Event]> {
         let filter = try req.query.decode(Filter.self)
-        let startIndex = filter.pagination?.offset ?? 0
+        let startIndex = filter.pagination?.index ?? 0
         let length = filter.pagination?.length ?? 50
         let endIndex = startIndex + length
         
