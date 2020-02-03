@@ -15,7 +15,7 @@ final class Order: VaporSibling {
     static var updatedAtKey: TimestampKey? { return \.updatedAt }
     
     var id: Int?
-    var customerID: Customer.ID
+    var customerID: Customer.ID!
     var vendorID: Vendor.ID
     var createdAt: Date?
     var updatedAt: Date?
