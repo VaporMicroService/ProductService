@@ -28,6 +28,9 @@ class ProductControllerTests: XCTestCase {
         ("testCreateVendor", testCreateVendor),
         ("testUpdateVendor", testUpdateVendor),
         ("testDeleteVendor", testDeleteVendor),
+        ("testLocationQuery", testLocationQuery),
+        ("testLocationQueryNoCoordinates", testLocationQueryNoCoordinates),
+        ("testLocationQueryNoDistance", testLocationQueryNoDistance),
     ]
     
     var app: Application!
@@ -129,5 +132,26 @@ class ProductControllerTests: XCTestCase {
         headers.replaceOrAdd(name: .contentID, value: "1234")
         let response = try app.sendRequest(to: "festivals/\(Vendor.name.lowercased())/\(vendor.id!)", method: .DELETE, headers: headers)
         XCTAssertEqual(response.http.status.code, 204)
+    }
+    
+    func testLocationQuery() throws {
+        var headers = HTTPHeaders()
+        headers.replaceOrAdd(name: .contentID, value: "1234")
+        let response = try app.sendRequest(to: "festivals/events?distance=10000&geoPoint%5Blongitude%5D=151.211&geoPoint%5Blatitude%5D=-33.8634", method: .GET, headers: headers)
+        XCTAssertEqual(response.http.status.code, 200)
+    }
+    
+    func testLocationQueryNoCoordinates() throws {
+        var headers = HTTPHeaders()
+        headers.replaceOrAdd(name: .contentID, value: "1234")
+        let response = try app.sendRequest(to: "festivals/events?distance=10000", method: .GET, headers: headers)
+        XCTAssertEqual(response.http.status.code, 400)
+    }
+    
+    func testLocationQueryNoDistance() throws {
+        var headers = HTTPHeaders()
+        headers.replaceOrAdd(name: .contentID, value: "1234")
+        let response = try app.sendRequest(to: "festivals/events?geoPoint%5Blongitude%5D=151.211&geoPoint%5Blatitude%5D=-33.8634", method: .GET, headers: headers)
+        XCTAssertEqual(response.http.status.code, 400)
     }
 }
