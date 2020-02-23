@@ -137,7 +137,7 @@ class ProductControllerTests: XCTestCase {
     func testLocationQuery() throws {
         var headers = HTTPHeaders()
         headers.replaceOrAdd(name: .contentID, value: "1234")
-        let response = try app.sendRequest(to: "festivals/events?distance=10000&geoPoint%5Blongitude%5D=151.211&geoPoint%5Blatitude%5D=-33.8634", method: .GET, headers: headers)
+        let response = try app.sendRequest(to: "festivals/events?geoPoint%255Blongitude%255D=151.21100000&geoPoint%255Blatitude%255D=-33.86340000&distance=10000", method: .GET, headers: headers)
         XCTAssertEqual(response.http.status.code, 200)
     }
     
